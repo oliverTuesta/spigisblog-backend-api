@@ -49,7 +49,7 @@ public class Post {
     private User user;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<PostComment> postComments;
+    private List<Comment> comments;
 
     @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY)

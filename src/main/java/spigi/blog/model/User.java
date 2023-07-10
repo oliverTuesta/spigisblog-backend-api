@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -39,20 +40,20 @@ public class User {
     @Column(name = "profile_picture_url", nullable = false, length = 255)
     private String profilePictureUrl;
 
-    @Column(name = "profile_background_url", nullable = false, length = 255)
+    @Column(name = "profile_background_url", nullable = true, length = 255)
     private String profileBackgroundUrl;
 
-    @Column(name = "profile_description", nullable = false, length = 150)
+    @Column(name = "profile_description", nullable = true, length = 150)
     private String profileDescription;
 
-    @Column(name = "website_url", nullable = false, length = 150)
+    @Column(name = "website_url", nullable = true, length = 150)
     private String websiteUrl;
 
     @Column(name = "registration_date", nullable = false)
-    private String registrationDate;
+    private LocalDateTime registrationDate;
 
-    @Column(name = "last_login_date", nullable = false)
-    private String lastLoginDate;
+    @Column(name = "last_login_date", nullable = true)
+    private LocalDateTime lastLoginDate;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)

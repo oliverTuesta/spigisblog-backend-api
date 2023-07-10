@@ -14,8 +14,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name="post_comments")
-public class PostComment {
+@Table(name="comments")
+public class Comment {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,12 +30,13 @@ public class PostComment {
     private String author;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id", nullable = false, foreignKey = @ForeignKey(name = "FK_POST_ID"))
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private Post post;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id", nullable = true, foreignKey = @ForeignKey(name = "FK_PARENT_ID"))
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private PostComment parent;
+    private Comment parent;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinTable(name = "post_categories",
+            joinColumns = @JoinColumn(name = "post_id", foreignKey = @ForeignKey(name = "FK_POST_CATEGORY_POST")),
+            inverseJoinColumns = @JoinColumn(name = "category_id", foreignKey = @ForeignKey(name = "FK_POST_CATEGORY_CATEGORY")))
+    private Post post;
 }
