@@ -4,7 +4,9 @@ import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import spigi.blog.dto.UserDTO;
+import spigi.blog.dto.user.UserCreationDto;
+import spigi.blog.dto.user.UserResponseDto;
+import spigi.blog.dto.user.UserUpdateDto;
 import spigi.blog.model.User;
 import spigi.blog.service.UserService;
 
@@ -22,7 +24,7 @@ public class UserController {
     // Method: POST
     @Transactional
     @PostMapping("/users")
-    public ResponseEntity<User> createUser(@RequestBody UserDTO userDto) {
+    public ResponseEntity<User> createUser(@RequestBody UserCreationDto userDto) {
         return new ResponseEntity<User>(userService.createUser(userDto), HttpStatus.CREATED);
     }
 
@@ -30,7 +32,7 @@ public class UserController {
     // Method: PUT
     @Transactional
     @PutMapping("/users/{id}")
-    public ResponseEntity<User> updateUser(@RequestBody UserDTO userDto, @PathVariable(value = "id") Long id) {
+    public ResponseEntity<User> updateUser(@RequestBody UserUpdateDto userDto, @PathVariable(value = "id") Long id) {
         return new ResponseEntity<User>(userService.updateUser(userDto, id), HttpStatus.OK);
     }
 
@@ -47,7 +49,7 @@ public class UserController {
     // Method: GET
     @Transactional
     @GetMapping("/users/{id}")
-    public ResponseEntity<UserDTO> getUser(@PathVariable(value = "id") Long id) {
-        return new ResponseEntity<UserDTO>(userService.getUser(id), HttpStatus.OK);
+    public ResponseEntity<UserResponseDto> getUser(@PathVariable(value = "id") Long id) {
+        return new ResponseEntity<UserResponseDto>(userService.getUser(id), HttpStatus.OK);
     }
 }

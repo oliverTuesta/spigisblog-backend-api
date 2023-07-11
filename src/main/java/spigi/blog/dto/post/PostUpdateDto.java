@@ -1,12 +1,9 @@
-package spigi.blog.dto;
+package spigi.blog.dto.post;
 
 import lombok.Data;
-import spigi.blog.model.User;
-
-import java.time.LocalDateTime;
 
 @Data
-public class PostDTO {
+public class PostUpdateDto {
     private String title;
     private String content;
     private String summary;

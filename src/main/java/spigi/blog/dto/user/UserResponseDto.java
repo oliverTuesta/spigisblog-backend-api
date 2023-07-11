@@ -1,12 +1,10 @@
-package spigi.blog.dto;
+package spigi.blog.dto.user;
 
 import lombok.Data;
 
 @Data
-public class UserDTO {
+public class UserResponseDto {
     private String username;
-    private String email;
-    private String password;
     private String firstName;
     private String lastName;
     private String profilePictureUrl;

@@ -4,7 +4,9 @@ import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import spigi.blog.dto.PostDTO;
+import spigi.blog.dto.post.PostCreationDto;
+import spigi.blog.dto.post.PostResponseDto;
+import spigi.blog.dto.post.PostUpdateDto;
 import spigi.blog.model.Post;
 import spigi.blog.service.PostService;
 
@@ -24,39 +26,39 @@ public class PostController {
     // Method: GET
     @Transactional
     @GetMapping("posts")
-    public ResponseEntity<List<PostDTO>> getAllPosts() {
-        return new ResponseEntity<List<PostDTO>>(postService.getAllPosts(), HttpStatus.OK);
+    public ResponseEntity<List<PostResponseDto>> getAllPosts() {
+        return new ResponseEntity<List<PostResponseDto>>(postService.getAllPosts(), HttpStatus.OK);
     }
 
     // URL: http://localhost:8080/api/blog/v1/posts/popular
     // Method: GET
     @Transactional
     @GetMapping("posts/popular")
-    public ResponseEntity<List<PostDTO>> getPopularPosts() {
-        return new ResponseEntity<List<PostDTO>>(postService.getPopularPosts(), HttpStatus.OK);
+    public ResponseEntity<List<PostResponseDto>> getPopularPosts() {
+        return new ResponseEntity<List<PostResponseDto>>(postService.getPopularPosts(), HttpStatus.OK);
     }
 
     // URL: http://localhost:8080/api/blog/v1/posts/recent
     // Method: GET
     @Transactional
     @GetMapping("posts/recent")
-    public ResponseEntity<List<PostDTO>> getRecentPosts() {
-        return new ResponseEntity<List<PostDTO>>(postService.getRecentPosts(), HttpStatus.OK);
+    public ResponseEntity<List<PostResponseDto>> getRecentPosts() {
+        return new ResponseEntity<List<PostResponseDto>>(postService.getRecentPosts(), HttpStatus.OK);
     }
 
     // URL: http://localhost:8080/api/blog/v1/posts/{id}
     // Method: GET
     @Transactional
     @GetMapping("posts/{id}")
-    public ResponseEntity<PostDTO> getPost(@PathVariable(value = "id") Long id) {
-        return new ResponseEntity<PostDTO>(postService.getPost(id), HttpStatus.OK);
+    public ResponseEntity<PostResponseDto> getPost(@PathVariable(value = "id") Long id) {
+        return new ResponseEntity<PostResponseDto>(postService.getPost(id), HttpStatus.OK);
     }
 
     // URL: http://localhost:8080/api/blog/v1/posts/{id}
     // Method: POST
     @Transactional
     @PostMapping("posts/{id}")
-    public ResponseEntity<Post> createPost(@RequestBody PostDTO postDto, @PathVariable(value = "id") Long userId) {
+    public ResponseEntity<Post> createPost(@RequestBody PostCreationDto postDto, @PathVariable(value = "id") Long userId) {
         return new ResponseEntity<Post>(postService.createPost(postDto, userId), HttpStatus.CREATED);
     }
 
@@ -64,8 +66,8 @@ public class PostController {
     // Method: PUT
     @Transactional
     @PutMapping("posts/{id}")
-    public ResponseEntity<Post> updatePost(@RequestBody PostDTO postDto, @PathVariable(value = "id") Long id) {
-        return new ResponseEntity<Post>(postService.updatePost(postDto, id), HttpStatus.OK);
+    public ResponseEntity<PostResponseDto> updatePost(@RequestBody PostUpdateDto postDto, @PathVariable(value = "id") Long id) {
+        return new ResponseEntity<PostResponseDto>(postService.updatePost(postDto, id), HttpStatus.OK);
     }
 
     // URL: http://localhost:8080/api/blog/v1/posts/{id}
@@ -86,12 +88,20 @@ public class PostController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    // URL: http://localhost:8080/api/blog/v1/users/{userId}/posts
+    // URL: http://localhost:8080/api/blog/v1/posts/user/id/{userId}
     // Method: GET
     @Transactional
-    @GetMapping("users/{userId}/posts")
-    public ResponseEntity<List<PostDTO>> getPostsByUser(@PathVariable(value = "userId") Long userId) {
-        return new ResponseEntity<List<PostDTO>>(postService.getPostsByUser(userId), HttpStatus.OK);
+    @GetMapping("users/id/{userId}/posts")
+    public ResponseEntity<List<PostResponseDto>> getPostsByUser(@PathVariable(value = "userId") Long userId) {
+        return new ResponseEntity<List<PostResponseDto>>(postService.getPostsByUser(userId), HttpStatus.OK);
+    }
+
+    // URL: http://localhost:8080/api/blog/v1/posts/user/{username}/posts
+    // Method: GET
+    @Transactional
+    @GetMapping("users/{username}/posts")
+    public ResponseEntity<List<PostResponseDto>> getPostByUsername(@PathVariable(value = "username") String username) {
+        return new ResponseEntity<List<PostResponseDto>>(postService.getPostByUsername(username), HttpStatus.OK);
     }
 
 

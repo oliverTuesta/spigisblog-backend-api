@@ -2,7 +2,9 @@ package spigi.blog.service.impl;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import spigi.blog.dto.PostDTO;
+import spigi.blog.dto.post.PostCreationDto;
+import spigi.blog.dto.post.PostResponseDto;
+import spigi.blog.dto.post.PostUpdateDto;
 import spigi.blog.exception.ResourceNotFoundException;
 import spigi.blog.exception.ValidationException;
 import spigi.blog.model.Post;
@@ -27,7 +29,7 @@ public class PostServiceImpl implements PostService {
         this.modelMapper = modelMapper;
     }
     @Override
-    public Post createPost(PostDTO postDto, Long userId) {
+    public Post createPost(PostCreationDto postDto, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found"));
         Post post = modelMapper.map(postDto, Post.class);
         post.setUser(user);
@@ -40,14 +42,14 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Post updatePost(PostDTO postDto, Long id) {
+    public PostResponseDto updatePost(PostUpdateDto postDto, Long id) {
         Post existingPost = postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post not found"));
         modelMapper.map(postDto, existingPost);
         validatePost(existingPost);
         if (existingPost.getIsVisible()) {
             existingPost.setUpdateDate(LocalDateTime.now());
         }
-        return postRepository.save(existingPost);
+        return modelMapper.map(postRepository.save(existingPost), PostResponseDto.class);
     }
 
     @Override
@@ -64,31 +66,36 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostDTO getPost(Long id) {
+    public PostResponseDto getPost(Long id) {
         Post post = postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post not found"));
         if (post.getIsVisible())
             post.setViews(post.getViews() + 1);
-        return modelMapper.map(post, PostDTO.class);
+        return modelMapper.map(post, PostResponseDto.class);
     }
 
     @Override
-    public List<PostDTO> getPostsByUser(Long userId) {
-        return postRepository.findAllByUserId(userId).stream().map(post -> modelMapper.map(post, PostDTO.class)).toList();
+    public List<PostResponseDto> getPostsByUser(Long userId) {
+        return postRepository.findAllByUserId(userId).stream().map(post -> modelMapper.map(post, PostResponseDto.class)).toList();
     }
 
     @Override
-    public List<PostDTO> getAllPosts() {
-        return postRepository.findAll().stream().map(post -> modelMapper.map(post, PostDTO.class)).toList();
+    public List<PostResponseDto> getPostByUsername(String username) {
+        return postRepository.findAllByUserUsernameAndIsVisibleTrue(username).stream().map(post -> modelMapper.map(post, PostResponseDto.class)).toList();
     }
 
     @Override
-    public List<PostDTO> getPopularPosts() {
-        return postRepository.findAllByIsVisibleTrueOrderByViewsDesc().stream().map(post -> modelMapper.map(post, PostDTO.class)).toList();
+    public List<PostResponseDto> getAllPosts() {
+        return postRepository.findAll().stream().map(post -> modelMapper.map(post, PostResponseDto.class)).toList();
     }
 
     @Override
-    public List<PostDTO> getRecentPosts() {
-        return postRepository.findAllByIsVisibleTrueOrderByCreateDateDesc().stream().map(post -> modelMapper.map(post, PostDTO.class)).toList();
+    public List<PostResponseDto> getPopularPosts() {
+        return postRepository.findAllByIsVisibleTrueOrderByViewsDesc().stream().map(post -> modelMapper.map(post, PostResponseDto.class)).toList();
+    }
+
+    @Override
+    public List<PostResponseDto> getRecentPosts() {
+        return postRepository.findAllByIsVisibleTrueOrderByCreateDateDesc().stream().map(post -> modelMapper.map(post, PostResponseDto.class)).toList();
     }
 
     private void validatePost(Post post) {
@@ -98,8 +105,8 @@ public class PostServiceImpl implements PostService {
         if (post.getTitle().length() > 75) {
             throw new ValidationException("Title must be less than 75 characters");
         }
-        if (!post.getTitle().matches("^[a-zA-Z0-9]*$")) {
-            throw new ValidationException("Title must only contain letters and/or numbers");
+        if (!post.getTitle().matches("^[a-zA-Z0-9 ]*$")) {
+            throw new ValidationException("Title must only contain letters, numbers and spaces");
         }
         if (post.getContent() == null || post.getContent().isEmpty()) {
             throw new ValidationException("Content is required");
