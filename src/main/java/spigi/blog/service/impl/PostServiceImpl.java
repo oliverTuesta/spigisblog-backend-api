@@ -12,6 +12,7 @@ import spigi.blog.model.User;
 import spigi.blog.repository.PostRepository;
 import spigi.blog.repository.UserRepository;
 import spigi.blog.service.PostService;
+import spigi.blog.validations.PostValidator;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,11 +23,13 @@ public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
+    private final PostValidator postValidator;
 
-    public PostServiceImpl(PostRepository postRepository, UserRepository userRepository, ModelMapper modelMapper) {
+    public PostServiceImpl(PostRepository postRepository, UserRepository userRepository, ModelMapper modelMapper, PostValidator postValidator) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
+        this.postValidator = postValidator;
     }
     @Override
     public Post createPost(PostCreationDto postDto, Long userId) {
@@ -36,7 +39,7 @@ public class PostServiceImpl implements PostService {
         post.setViews(0L);
         post.setIsVisible(false);
         post.setSlug(post.getTitle().toLowerCase().replace(" ", "-"));
-        validatePost(post);
+        postValidator.validatePost(post);
         post.setCreateDate(LocalDateTime.now());
         return postRepository.save(post);
     }
@@ -45,7 +48,7 @@ public class PostServiceImpl implements PostService {
     public PostResponseDto updatePost(PostUpdateDto postDto, Long id) {
         Post existingPost = postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post not found"));
         modelMapper.map(postDto, existingPost);
-        validatePost(existingPost);
+        postValidator.validatePost(existingPost);
         if (existingPost.getIsVisible()) {
             existingPost.setUpdateDate(LocalDateTime.now());
         }
@@ -96,35 +99,5 @@ public class PostServiceImpl implements PostService {
     @Override
     public List<PostResponseDto> getRecentPosts() {
         return postRepository.findAllByIsVisibleTrueOrderByCreateDateDesc().stream().map(post -> modelMapper.map(post, PostResponseDto.class)).toList();
-    }
-
-    private void validatePost(Post post) {
-        if (post.getTitle() == null || post.getTitle().isEmpty()) {
-            throw new ValidationException("Title is required");
-        }
-        if (post.getTitle().length() > 75) {
-            throw new ValidationException("Title must be less than 75 characters");
-        }
-        if (!post.getTitle().matches("^[a-zA-Z0-9 ]*$")) {
-            throw new ValidationException("Title must only contain letters, numbers and spaces");
-        }
-        if (post.getContent() == null || post.getContent().isEmpty()) {
-            throw new ValidationException("Content is required");
-        }
-        if (post.getSummary() == null || post.getSummary().isEmpty()) {
-            throw new ValidationException("Summary is required");
-        }
-        if (post.getThumbnailUrl() == null || post.getThumbnailUrl().isEmpty()) {
-            throw new ValidationException("Thumbnail URL is required");
-        }
-        if (!post.getThumbnailUrl().matches("^(http(s?):)([/|.|\\w|\\s|-])*\\.(?:jpg|gif|png)$")) {
-            throw new ValidationException("Thumbnail URL is invalid");
-        }
-        if (post.getUser().getId() == null) {
-            throw new ValidationException("User ID is required");
-        }
-        if (!userRepository.existsById(post.getUser().getId())) {
-            throw new ValidationException("User not found");
-        }
     }
 }

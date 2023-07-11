@@ -46,6 +46,9 @@ public class UserValidator {
         if (username == null || username.isEmpty()) {
             throw new ValidationException("Username is required");
         }
+        if (!username.matches("^[a-zA-Z0-9_]*$")) {
+            throw new ValidationException("Username must only contain letters, numbers, and underscores");
+        }
     }
 
     private void validatePassword(String password) {
