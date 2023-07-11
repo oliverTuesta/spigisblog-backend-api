@@ -42,4 +42,12 @@ public class UserController {
         userService.deleteUser(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    // URL: http://localhost:8080/api/blog/v1/users/{id}
+    // Method: GET
+    @Transactional
+    @GetMapping("/users/{id}")
+    public ResponseEntity<UserDTO> getUser(@PathVariable(value = "id") Long id) {
+        return new ResponseEntity<UserDTO>(userService.getUser(id), HttpStatus.OK);
+    }
 }

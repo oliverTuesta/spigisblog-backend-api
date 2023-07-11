@@ -37,7 +37,7 @@ public class User {
     @Column(name = "last_name", nullable = false, length = 40)
     private String lastName;
 
-    @Column(name = "profile_picture_url", nullable = false, length = 255)
+    @Column(name = "profile_picture_url", nullable = true, length = 255)
     private String profilePictureUrl;
 
     @Column(name = "profile_background_url", nullable = true, length = 255)

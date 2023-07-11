@@ -42,6 +42,12 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(id);
     }
 
+    @Override
+    public UserDTO getUser(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        return modelMapper.map(user, UserDTO.class);
+    }
+
     private void validateUser(UserDTO user) {
         if (user.getUsername() == null || user.getUsername().isEmpty()) {
             throw new ValidationException("Username is required");
@@ -51,6 +57,9 @@ public class UserServiceImpl implements UserService {
         }
         if (user.getEmail() == null || user.getEmail().isEmpty()) {
             throw new ValidationException("Email is required");
+        }
+        if (user.getProfilePictureUrl() != null && !user.getProfilePictureUrl().matches("^(http(s?):/)(/[^/]+)+\\.(?:jpg|jpeg|png)$")) {
+            throw new ValidationException("Profile picture URL has the wrong format");
         }
         if (user.getUsername().length() < 4 || user.getUsername().length() > 20) {
             throw new ValidationException("Username must be between 4 and 20 characters long");

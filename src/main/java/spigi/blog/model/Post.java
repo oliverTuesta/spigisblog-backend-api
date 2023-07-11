@@ -40,8 +40,17 @@ public class Post {
     @Column(name = "create_date", nullable = false, updatable = false)
     private LocalDateTime createDate;
 
-    @Column(name = "update_date", nullable = false)
+    @Column(name = "update_date", nullable = true)
     private LocalDateTime updateDate;
+
+    @Column(name = "publish_date", nullable = true)
+    private LocalDateTime publishDate;
+
+    @Column(name = "is_visible", nullable = false)
+    private Boolean isVisible;
+
+    @Column(name = "views", nullable = false)
+    private Long views;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "FK_USER_ID"))
