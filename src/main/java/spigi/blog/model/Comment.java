@@ -34,9 +34,9 @@ public class Comment {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Comment parent;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinTable(name = "post_categories",
-            joinColumns = @JoinColumn(name = "post_id", foreignKey = @ForeignKey(name = "FK_POST_CATEGORY_POST")),
-            inverseJoinColumns = @JoinColumn(name = "category_id", foreignKey = @ForeignKey(name = "FK_POST_CATEGORY_CATEGORY")))
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "post_id", nullable = false, foreignKey = @ForeignKey(name = "FK_POST_ID"))
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Post post;
 }
+

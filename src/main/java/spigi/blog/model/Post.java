@@ -63,7 +63,15 @@ public class Post {
     @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "post_categories",
-            joinColumns = @JoinColumn(name = "post_id", foreignKey = @ForeignKey(name = "FK_POST_ID")),
-            inverseJoinColumns = @JoinColumn(name = "category_id", foreignKey = @ForeignKey(name = "FK_CATEGORY_ID")))
+            joinColumns = @JoinColumn(name = "post_id", foreignKey = @ForeignKey(name = "FK_POST_CATEGORIES_POST_ID")),
+            inverseJoinColumns = @JoinColumn(name = "category_id", foreignKey = @ForeignKey(name = "FK_POST_CATEGORIES_CATEGORY_ID")))
     private List<Category> categories;
+
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "post_tags",
+            joinColumns = @JoinColumn(name = "post_id", foreignKey = @ForeignKey(name = "FK_POST_TAGS_POST_ID")),
+            inverseJoinColumns = @JoinColumn(name = "tag_id", foreignKey = @ForeignKey(name = "FK_POST_TAGS_TAG_ID")))
+    private List<Tag> tags;
+
 }

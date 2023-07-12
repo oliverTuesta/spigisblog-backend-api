@@ -46,10 +46,10 @@ public class PostController {
         return new ResponseEntity<List<PostResponseDto>>(postService.getRecentPosts(), HttpStatus.OK);
     }
 
-    // URL: http://localhost:8080/api/blog/v1/posts/{id}
+    // URL: http://localhost:8080/api/blog/v1/posts/id/{id}
     // Method: GET
     @Transactional
-    @GetMapping("posts/{id}")
+    @GetMapping("posts/id/{id}")
     public ResponseEntity<PostResponseDto> getPost(@PathVariable(value = "id") Long id) {
         return new ResponseEntity<PostResponseDto>(postService.getPost(id), HttpStatus.OK);
     }
@@ -104,6 +104,64 @@ public class PostController {
         return new ResponseEntity<List<PostResponseDto>>(postService.getPostByUsername(username), HttpStatus.OK);
     }
 
+    // URL: http://localhost:8080/api/blog/v1/posts/{slug}
+    // Method: GET
+    @Transactional
+    @GetMapping("posts/{slug}")
+    public ResponseEntity<PostResponseDto> getPostBySlug(@PathVariable(value = "slug") String slug) {
+        return new ResponseEntity<PostResponseDto>(postService.getPostBySlug(slug), HttpStatus.OK);
+    }
 
+    // URL: http://localhost:8080/api/blog/v1/posts/tag/{tagSlug}
+    // Method: GET
+    @Transactional
+    @GetMapping("posts/tag/{tagSlug}")
+    public ResponseEntity<List<PostResponseDto>> getPostsByTag(@PathVariable(value = "tagSlug") String tagSlug) {
+        return new ResponseEntity<List<PostResponseDto>>(postService.getPostsByTagSlug(tagSlug), HttpStatus.OK);
+    }
+
+    // URL: http://localhost:8080/api/blog/v1/posts/tag
+    // Method: POST
+    @Transactional
+    @PostMapping("posts/tag")
+    public ResponseEntity<?> addTagToPost(@RequestParam(value = "postSlug") String postSlug, @RequestParam(value = "tagSlug") String tagSlug) {
+        postService.addTag(postSlug, tagSlug);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    // URL: http://localhost:8080/api/blog/v1/posts/tag
+    // Method: DELETE
+    @Transactional
+    @DeleteMapping("posts/tag")
+    public ResponseEntity<?> removeTagFromPost(@RequestParam(value = "postSlug") String postSlug, @RequestParam(value = "tagSlug") String tagSlug) {
+        postService.removeTag(postSlug, tagSlug);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    // URL: http://localhost:8080/api/blog/v1/posts/category/{categorySlug}
+    // Method: GET
+    @Transactional
+    @GetMapping("posts/category/{categorySlug}")
+    public ResponseEntity<List<PostResponseDto>> getPostsByCategory(@PathVariable(value = "categorySlug") String categorySlug) {
+        return new ResponseEntity<List<PostResponseDto>>(postService.getPostsByCategorySlug(categorySlug), HttpStatus.OK);
+    }
+
+    // URL: http://localhost:8080/api/blog/v1/posts/category
+    // Method: POST
+    @Transactional
+    @PostMapping("posts/category")
+    public ResponseEntity<?> addCategoryToPost(@RequestParam(value = "postSlug") String postSlug, @RequestParam(value = "categorySlug") String categorySlug) {
+        postService.addCategory(postSlug, categorySlug);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    // URL: http://localhost:8080/api/blog/v1/posts/category
+    // Method: DELETE
+    @Transactional
+    @DeleteMapping("posts/category")
+    public ResponseEntity<?> removeCategoryFromPost(@RequestParam(value = "postSlug") String postSlug, @RequestParam(value = "categorySlug") String categorySlug) {
+        postService.removeCategory(postSlug, categorySlug);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 }

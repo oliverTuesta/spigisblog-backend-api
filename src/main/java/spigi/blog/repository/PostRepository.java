@@ -10,4 +10,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findAllByIsVisibleTrueOrderByViewsDesc();
     List<Post> findAllByIsVisibleTrueOrderByCreateDateDesc();
     List<Post> findAllByUserUsernameAndIsVisibleTrue(String username);
+    List<Post> findAllByTagsSlugAndIsVisibleTrue(String slug);
+    Post findBySlug(String slug);
 }

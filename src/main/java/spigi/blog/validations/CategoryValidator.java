@@ -8,7 +8,7 @@ import spigi.blog.repository.CategoryRepository;
 @Component
 public class CategoryValidator {
 
-    private CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
 
     public CategoryValidator(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
@@ -54,14 +54,14 @@ public class CategoryValidator {
         if (slug == null || slug.isEmpty()) {
             throw new ValidationException("Slug is required");
         }
-        if (categoryRepository.existsBySlug(slug)) {
-            throw new ValidationException("Slug must be unique");
-        }
         if (!slug.matches("^[a-zA-Z0-9 -]*$")) {
             throw new ValidationException("Slug must only contain letters, numbers, spaces, and dashes");
         }
         if (slug.length() > 30) {
             throw new ValidationException("Slug is maximum 30");
+        }
+        if (categoryRepository.existsBySlug(slug)) {
+            throw new ValidationException("Slug must be unique");
         }
     }
 
