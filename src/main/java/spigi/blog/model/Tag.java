@@ -14,16 +14,16 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name="tags")
+@Table(name = "tags")
 public class Tag {
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name="name", nullable = false, length = 30)
+    @Column(name = "name", nullable = false, length = 30)
     private String name;
 
-    @Column(name="slug", nullable = false, length = 30, unique = true)
+    @Column(name = "slug", nullable = false, length = 30, unique = true)
     private String slug;
 
     @JsonIgnore

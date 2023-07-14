@@ -16,25 +16,25 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="posts")
+@Table(name = "posts")
 public class Post {
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name="title", nullable = false, unique = true, length = 75)
+    @Column(name = "title", nullable = false, unique = true, length = 75)
     private String title;
 
-    @Column(name="content", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "content", nullable = false, columnDefinition = "TEXT")
     private String content;
 
-    @Column(name="summary", nullable = false, columnDefinition = "TINYTEXT")
+    @Column(name = "summary", nullable = false, columnDefinition = "TINYTEXT")
     private String summary;
 
-    @Column(name="thumbnail_url", nullable = false, length = 255)
+    @Column(name = "thumbnail_url", nullable = false, length = 255)
     private String thumbnailUrl;
 
-    @Column(name="slug", nullable = false, unique = true, length = 75)
+    @Column(name = "slug", nullable = false, unique = true, length = 75)
     private String slug;
 
     @Column(name = "create_date", nullable = false, updatable = false)

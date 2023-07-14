@@ -9,6 +9,7 @@ import java.util.List;
 
 @Data
 public class PostResponseDto {
+    private Long id;
     private String title;
     private String content;
     private String summary;
